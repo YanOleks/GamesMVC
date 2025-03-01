@@ -20,10 +20,21 @@ namespace GamesInfrastructure.Controllers
         }
 
         // GET: Publishers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id, string? name)
         {
-            var istp1Context = _context.Publishers.Include(p => p.CountryOfOriginNavigation);
-            return View(await istp1Context.ToListAsync());
+            if (id == null)
+            {
+                var publisherByCountry = _context.Publishers.Include(p => p.CountryOfOriginNavigation);
+                return View(await publisherByCountry.ToListAsync());
+            }
+            else
+            {
+                ViewBag.CountryId = id;
+                ViewBag.CountryName = name;
+
+                var publisherByCountry = _context.Publishers.Where(p => p.CountryOfOrigin == id).Include(p => p.CountryOfOriginNavigation);
+                return View(await publisherByCountry.ToListAsync());
+            }            
         }
 
         // GET: Publishers/Details/5
@@ -42,7 +53,7 @@ namespace GamesInfrastructure.Controllers
                 return NotFound();
             }
 
-            return View(publisher);
+            return RedirectToAction("Index", "Games", publisher);
         }
 
         // GET: Publishers/Create

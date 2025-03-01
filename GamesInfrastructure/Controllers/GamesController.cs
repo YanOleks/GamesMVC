@@ -20,10 +20,21 @@ namespace GamesInfrastructure.Controllers
         }
 
         // GET: Games
-        public async Task<IActionResult> Index()
-        {
-            var istp1Context = _context.Games.Include(g => g.Genre).Include(g => g.Publisher);
-            return View(await istp1Context.ToListAsync());
+        public async Task<IActionResult> Index(int? id, string? name)
+        {            
+            if (id == null)
+            {
+                var istp1Context = _context.Games.Include(g => g.Genre).Include(g => g.Publisher);
+                return View(await istp1Context.ToListAsync());
+            }
+            else
+            {
+                ViewBag.PublisherId = id;
+                ViewBag.PublisherName = name;
+
+                var istp1Context = _context.Games.Where(g => g.PublisherId == id).Include(g => g.Genre).Include(g => g.Publisher);
+                return View(await istp1Context.ToListAsync());
+            }
         }
 
         // GET: Games/Details/5

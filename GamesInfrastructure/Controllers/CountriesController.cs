@@ -40,7 +40,7 @@ namespace GamesInfrastructure.Controllers
                 return NotFound();
             }
 
-            return View(country);
+            return RedirectToAction("Index", "Publishers", new {id = country.Id, name = country.Name});
         }
 
         // GET: Countries/Create
