@@ -142,6 +142,14 @@ namespace GamesInfrastructure.Controllers
             var genre = await _context.Genres.FindAsync(id);
             if (genre != null)
             {
+                var games = _context.Games.Where(g => g.GenreId == id);
+                var gameIds = games.Select(g => g.Id);
+                var stocks = _context.Stocks.Where(s => gameIds.Contains(s.GameId));
+                var reviews = _context.Reviews.Where(r => gameIds.Contains(r.GameId));
+
+                _context.Reviews.RemoveRange(reviews);
+                _context.Stocks.RemoveRange(stocks);
+                _context.Games.RemoveRange(games);
                 _context.Genres.Remove(genre);
             }
 

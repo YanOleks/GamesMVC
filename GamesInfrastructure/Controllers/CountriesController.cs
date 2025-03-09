@@ -142,6 +142,17 @@ namespace GamesInfrastructure.Controllers
             var country = await _context.Countries.FindAsync(id);
             if (country != null)
             {
+                var publishers = _context.Publishers.Where(p => p.CountryOfOrigin == id);
+
+                var games = _context.Games.Where(g => publishers.Select(p => p.Id).Contains(g.PublisherId));
+                var gameIds = games.Select(g => g.Id);
+                var stocks = _context.Stocks.Where(s => gameIds.Contains(s.GameId));
+                var reviews = _context.Reviews.Where(r => gameIds.Contains(r.GameId));
+                 
+                _context.Reviews.RemoveRange(reviews);
+                _context.Stocks.RemoveRange(stocks);
+                _context.Games.RemoveRange(games);
+                _context.Publishers.RemoveRange(publishers);
                 _context.Countries.Remove(country);
             }
 

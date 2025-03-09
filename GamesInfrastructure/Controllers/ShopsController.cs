@@ -142,6 +142,8 @@ namespace GamesInfrastructure.Controllers
             var shop = await _context.Shops.FindAsync(id);
             if (shop != null)
             {
+                var stocks = _context.Stocks.Where(s => s.ShopId == id);
+                _context.Stocks.RemoveRange(stocks);
                 _context.Shops.Remove(shop);
             }
 

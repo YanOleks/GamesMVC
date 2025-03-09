@@ -166,6 +166,11 @@ namespace GamesInfrastructure.Controllers
             var game = await _context.Games.FindAsync(id);
             if (game != null)
             {
+                var stocks = _context.Stocks.Where(s => s.GameId == id);
+                var reviews = _context.Reviews.Where(r => r.GameId == id);
+                _context.Reviews.RemoveRange(reviews);
+                _context.Stocks.RemoveRange(stocks);
+
                 _context.Games.Remove(game);
             }
 

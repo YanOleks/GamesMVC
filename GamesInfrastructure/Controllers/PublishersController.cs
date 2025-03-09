@@ -160,6 +160,14 @@ namespace GamesInfrastructure.Controllers
             var publisher = await _context.Publishers.FindAsync(id);
             if (publisher != null)
             {
+                var games = _context.Games.Where(g => g.PublisherId == id);
+                var gameIds = games.Select(g => g.Id);
+                var stocks = _context.Stocks.Where(s => gameIds.Contains(s.GameId));
+                var reviews = _context.Reviews.Where(r => gameIds.Contains(r.GameId));
+
+                _context.Reviews.RemoveRange(reviews);
+                _context.Stocks.RemoveRange(stocks);
+                _context.Games.RemoveRange(games);
                 _context.Publishers.Remove(publisher);
             }
 

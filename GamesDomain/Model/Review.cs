@@ -14,11 +14,12 @@ public partial class Review
 
     [Display(Name = "Оцінка")]
     [Required(ErrorMessage = "Поле має бути заповнене")]
+    [Range(1, 5, ErrorMessage = "Значення має бути від 1 до 5")]
     public int Rating { get; set; }
 
     [Display(Name = "Відгук")]
     public string? Review1 { get; set; }
 
     [Display(Name = "Гра")]
-    public virtual Game Game { get; set; } = null!;
+    public virtual Game? Game { get; set; } = null!;
 }

@@ -45,3 +45,46 @@
 }
     </tbody>
 </table>
+
+<div class="row">
+    <div class="col-3">
+        <div id="rateForGame"></div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+            fetch('/api/charts/rateForGame')
+                .then(response => response.json())
+                .then(data => {
+                    const dataTable = new google.visualization.DataTable();
+                    dataTable.addColumn('string', 'Game');
+                    dataTable.addColumn('number', 'Rating');
+
+                    data.forEach(item => {
+                        dataTable.addRow([item.game, item.rating]);
+                 });
+
+                    const options = {
+                        title: 'Game rating',
+                        width: 600,
+                        height: 400,
+                        legend: { position: 'none' },
+                        vAxis: {
+                            maxValue: 5
+                        }
+                    };
+
+                    const chart = new google.visualization.ColumnChart(document.getElementById('rateForGame'));
+
+                    chart.draw(dataTable, options);
+                });
+        }
+    </script>
+}
